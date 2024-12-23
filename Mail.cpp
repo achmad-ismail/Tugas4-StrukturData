@@ -48,6 +48,9 @@ void tambahData() {
 
     pos++;
     cout << "\nMasukkan Data Mahasiswa\n";
+
+    cin.ignore();  // Membersihkan buffer sebelum getline
+
     cout << "Masukkan NIM: ";
     getline(cin, dataMahasiswa[pos].nim); 
     cout << "Masukkan Nama: ";
@@ -58,6 +61,8 @@ void tambahData() {
     getline(cin, dataMahasiswa[pos].tanggalLahir); 
     cout << "Masukkan IPK: ";
     cin >> dataMahasiswa[pos].ipk;
+
+    cin.ignore();  // Membersihkan buffer setelah membaca angka
 }
 
 void tampilkanData() {
@@ -66,6 +71,7 @@ void tampilkanData() {
         cout << "\nTidak ada data mahasiswa.\n";
         return;
     }
+
     cout << "\n=== Data Mahasiswa ===\n";
     cout << left << setw(15) << "NIM" 
         << setw(30) << "Nama"
@@ -73,6 +79,7 @@ void tampilkanData() {
         << setw(15) << "Tgl Lahir"
         << setw(5)  << "IPK" << endl;
     cout << string(100, '-') << endl;
+
     for (int i = 0; i <= pos; i++) {
         cout << left << setw(15) << dataMahasiswa[i].nim
             << setw(30) << dataMahasiswa[i].nama
@@ -90,10 +97,12 @@ void updateData() {
         cout << "\nTidak ada data mahasiswa untuk diupdate.\n";
         return;
     }
+
     string nim;
     cout << "\nMasukkan NIM mahasiswa yang ingin diupdate: ";
     cin.ignore(); // Menghindari masalah dengan buffer input
     getline(cin, nim);
+
     int index = cariDataByNIM(nim);
     if (index != -1) {
         cout << "\nMasukkan data baru untuk mahasiswa dengan NIM " << nim << ":\n";
@@ -105,6 +114,8 @@ void updateData() {
         getline(cin, dataMahasiswa[index].tanggalLahir);
         cout << "IPK: ";
         cin >> dataMahasiswa[index].ipk;
+
+        cin.ignore();  // Membersihkan buffer setelah membaca angka
     } else {
         cout << "\nMahasiswa dengan NIM " << nim << " tidak ditemukan.\n";
     }
@@ -120,6 +131,7 @@ void hapusData() {
     cout << "\nMasukkan NIM mahasiswa yang ingin dihapus: ";
     cin.ignore(); // Menghindari masalah dengan buffer input
     getline(cin, nim);
+
     int index = cariDataByNIM(nim);
     if (index != -1) {
         for (int i = index; i < pos; i++) {
@@ -131,6 +143,8 @@ void hapusData() {
         cout << "\nMahasiswa dengan NIM " << nim << " tidak ditemukan.\n";
     }
 }
+
+
 bool konfirmasiKeluar() {
     char pilihan;
     cout << "\nApakah Anda yakin ingin keluar? (y/n): ";
@@ -138,16 +152,16 @@ bool konfirmasiKeluar() {
     return (pilihan == 'y' || pilihan == 'Y');
 }
 
+
 int main() {
-char pl;
-do
-{
-    
+char pilihan;
+do {
+    system("cls");  // Clear screen sebelum menu
 
     tampilkanMenu();
-    pl=getch();
-  switch (pl)
-  {
+    cin >> pilihan;
+
+    switch (pilihan) {
    case '1':
     tambahData();
     break;
@@ -161,15 +175,22 @@ do
     hapusData();
     break;  
   case '5':
-    
-    break;
+    if (konfirmasiKeluar()) {
+        cout << "\nTerima kasih telah menggunakan program ini.\n";
+        return 0;
+        }
+        break;
+    default:
+        cout << "\nPilihan tidak valid. Coba lagi.\n";
+        break;
+        }
   
-  default:
-    system("cls");
-    cout<<"Pilihan Tidak Tersedia";
-    getch();
-    break;
-  }
-} while (pl!='5');
-  return 0;
+  // Memberi kesempatan untuk menekan tombol apapun sebelum kembali ke menu
+        cout << "\nTekan enter untuk kembali ke menu...";
+        cin.ignore();  // Mengosongkan buffer
+        cin.get();     // Menunggu input enter dari pengguna
+
+    } while (pilihan != '5');
+
+    return 0;
 }
